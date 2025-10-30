@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY . .
 
-# --- Build deployer payload (gen/pg) ---
+# --- Build for deployer (cds-deploy payload) ---
 FROM base AS build
 RUN npx cds build --production || true
 
@@ -17,7 +17,7 @@ COPY --from=base /app ./
 EXPOSE 4004
 CMD ["npm","start","--","--port","4004"]
 
-# --- Deployer image (runs cds-deploy) ---
+# --- Deployer image (runs cds-deploy once) ---
 FROM node:20-alpine AS deployer
 WORKDIR /deployer
 ENV NODE_ENV=production
